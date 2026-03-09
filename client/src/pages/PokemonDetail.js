@@ -54,7 +54,10 @@ function PokemonDetail() {
 
     return (
         <div className="pokemon-detail">
-            <button onClick={() => navigate(-1)}>← Back</button>
+            <div className="detail-buttons">
+                <button onClick={() => navigate(-1)}>← Back</button>
+                <button onClick={() => navigate('/')}>Home</button>
+            </div>
                 <div className="detail-header">
                     <div className="sprite-container" style={spriteStyle}>
                         <img src={isShiny ? pokemon.sprite_shiny : pokemon.sprite} alt={pokemon.name} />
@@ -110,6 +113,29 @@ function PokemonDetail() {
                         </p>
                     </div>
                 ))}
+            </div>
+
+            <div className="detail-evolution">
+                <h2>Evolution Chain</h2>
+                <div className="evolution-chain">
+                    {pokemon.evolutionChain.map((evo, index) => (
+                        <React.Fragment key={evo.id}>
+                            <div
+                                className={`evolution-card ${evo.id === String(pokemon.id) ? 'current' : ''}`}
+                                onClick={() => navigate(`/pokemon/${evo.id}`)}
+                            >
+                                <img
+                                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.id}.png`}
+                                    alt={evo.name}
+                                />
+                                <span>{evo.name}</span>
+                            </div>
+                            {index < pokemon.evolutionChain.length - 1 && (
+                                <span className="evolution-arrow">→</span>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </div>
             </div>
 
             <div className="detail-moves">

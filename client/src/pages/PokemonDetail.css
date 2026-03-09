@@ -142,3 +142,50 @@ button:hover {
     justify-content: center;
     flex-shrink: 0;
 }
+
+.evolution-chain {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.evolution-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #2a2d45;
+    transition: transform 0.2s ease;
+    text-transform: capitalize;
+}
+
+.evolution-card:hover {
+    transform: scale(1.05);
+}
+
+.evolution-card.current {
+    border: 2px solid var(--primary-color);
+}
+
+.evolution-card img {
+    width: 80px;
+    height: 80px;
+}
+
+.evolution-card span {
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.evolution-arrow {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.detail-buttons {
+    display: flex;
+    gap: 10px;
+}

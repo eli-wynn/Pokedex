@@ -48,6 +48,21 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
             'generation-ix': 'Generation IX',
         }
 
+        const evolutionChainRes = await axios.get(species.evolution_chain.url)
+        const parseEvolutionChain = (chain) => {
+            const evolutions = []
+            let current = chain
+            
+            while (current) {
+                evolutions.push({
+                    name: current.species.name,
+                    id: current.species.url.split('/').slice(-2, -1)[0]
+                })
+                current = current.evolves_to[0]
+            }
+            return evolutions
+        }
+
 
         const description = species.flavor_text_entries
             .find(e => e.language.name === 'en')
@@ -76,7 +91,8 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
             })),
             height: data.height,
             weight: data.weight,
-            generation: generationMap[generation] || generation
+            generation: generationMap[generation] || generation,
+            evolutionChain: parseEvolutionChain(evolutionChainRes.data.chain)
         }
 
         cache.set(id, result)
