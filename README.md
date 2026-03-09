@@ -115,31 +115,31 @@ Returns full details for a single Pokémon by ID or name.
 
 **Example:**
 ```
-GET /api/pokemon/pikachu
-GET /api/pokemon/25
+GET /api/pokemon/gengar
+GET /api/pokemon/94
 ```
 
 **Response:**
 ```json
 {
-  "id": 25,
-  "name": "pikachu",
-  "description": "When several of these Pokémon gather...",
+  "id": 94,
+  "name": "gengar",
+  "description": "On the night of a full moon, if shadows move on their own...",
   "sprite": "https://...",
   "sprite_shiny": "https://...",
-  "types": ["electric"],
-  "abilities": [{ "ability": "static", "hidden": false }],
-  "stats": [{ "name": "hp", "value": 35 }],
-  "moves": ["thunder-shock", "tail-whip"],
-  "height": 0.4,
-  "weight": 6.0,
+  "types": ["ghost", "poison"],
+  "abilities": [{ "ability": "cursed-body", "hidden": false }],
+  "stats": [{ "name": "hp", "value": 60 }],
+  "moves": ["lick", "night-shade"],
+  "height": 1.5,
+  "weight": 40.5,
   "generation": "Generation I",
   "isLegendary": false,
   "isMythical": false,
   "evolutionChain": [
-    { "name": "pichu", "id": "172" },
-    { "name": "pikachu", "id": "25" },
-    { "name": "raichu", "id": "26" }
+    { "name": "gastly", "id": "92" },
+    { "name": "haunter", "id": "93" },
+    { "name": "gengar", "id": "94" }
   ]
 }
 ```
@@ -184,12 +184,12 @@ GET /api/types
 - [ ] Loading skeleton cards instead of plain loading text
 - [ ] Mobile responsiveness improvements
 - [ ] Dark/light theme toggle
+- [ ] Pokemon Team builder
+- [ ] Item index
 
 ---
 
 ## 📸 Screenshots
-
-> Add screenshots of your app here by dragging images into the GitHub editor!
 
 | Home Page | Detail Page |
 |-----------|-------------|
