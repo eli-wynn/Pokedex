@@ -25,6 +25,11 @@ button:hover {
     margin-bottom: 20px;
 }
 
+.detail-header .types {
+    display: flex;
+    gap: 8px;
+}
+
 .detail-header img {
     width: 200px;
     height: 200px;
@@ -126,4 +131,14 @@ button:hover {
     padding: 5px 12px;
     font-size: 0.85rem;
     text-transform: capitalize;
+}
+
+.sprite-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }

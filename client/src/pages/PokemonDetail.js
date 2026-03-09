@@ -8,8 +8,8 @@ function PokemonDetail() {
     const navigate = useNavigate()
     const [pokemon, setPokemon] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [abilityDetails, setAbilityDetails] = useState(true)
-
+    const [abilityDetails, setAbilityDetails] = useState({})
+    const [isShiny] = useState(() => Math.random() < 1/10)
     useEffect(() => {
         const fetchPokemon = async () => {
             try {
@@ -46,25 +46,33 @@ function PokemonDetail() {
     if (loading) return <p>Loading...</p>
     if (!pokemon) return <p>Pokémon not found.</p>
 
+    const spriteStyle = pokemon.types.length === 2
+    ? { background: `radial-gradient(circle, var(--type-${pokemon.types[0]}), var(--type-${pokemon.types[1]}))` }
+    : { background: `radial-gradient(circle, var(--type-${pokemon.types[0]}), transparent)` }
+
+
+
     return (
         <div className="pokemon-detail">
             <button onClick={() => navigate(-1)}>← Back</button>
-
-            <div className="detail-header">
-                <img src={pokemon.sprite} alt={pokemon.name} />
-                <div>
-                    <h1>#{String(pokemon.id).padStart(3, '0')} {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
-                    <div className="types">
-                        {pokemon.types.map(type => (
-                            <span key={type} className={`type-badge ${type}`}>
-                                {type}
-                            </span>
-                        ))}
+                <div className="detail-header">
+                    <div className="sprite-container" style={spriteStyle}>
+                        <img src={isShiny ? pokemon.sprite_shiny : pokemon.sprite} alt={pokemon.name} />
+                        {isShiny && <span className="shiny-label">✨</span>}
                     </div>
-                    <p>Height: {pokemon.height / 10}m</p>
-                    <p>Weight: {pokemon.weight / 10}kg</p>
+                    <div>
+                        <h1>#{String(pokemon.id).padStart(3, '0')} {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
+                        <div className="types">
+                            {pokemon.types.map(type => (
+                                <span key={type} className={`type-badge ${type}`}>
+                                    {type}
+                                </span>
+                            ))}
+                        </div>
+                        <p>Height: {pokemon.height / 10}m</p>
+                        <p>Weight: {pokemon.weight / 10}kg</p>
+                    </div>
                 </div>
-            </div>
 
             <div className="detail-description">
                 <p>{pokemon.description}</p>
@@ -88,7 +96,7 @@ function PokemonDetail() {
 
             <div className="detail-abilities">
                 <h2>Abilities</h2>
-                 {pokemon.abilities.map(ability => (
+                {pokemon.abilities.map(ability => (
                     <div key={ability.ability} className="ability-row">
                         <div className="ability-header">
                             <span className="ability-name">{ability.ability}</span>
