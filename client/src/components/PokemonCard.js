@@ -27,7 +27,10 @@ function PokemonCard({ name, url, onDetailsLoaded }) {
     return (
         <div className="pokemon-card" onClick={() => navigate(`/pokemon/${id}`)}>
             <img className="pokemon-image" src={details.sprite} alt={details.name} />
-            <h3>#{String(details.id).padStart(3, '0')} {details.name}</h3>
+            <h3>
+                <span className="pokemon-number">#{String(details.id).padStart(3, '0')}</span>
+                <span className="pokemon-name">{details.name}</span>
+            </h3>
             <div className="types">
                 {details.types.map(type => (
                     <span key={type} className={`type-badge ${type}`}>

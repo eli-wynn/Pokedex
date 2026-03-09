@@ -23,6 +23,8 @@
     font-size: 1.5rem;
     color: var(--primary-color);
     text-transform: capitalize;
+    display: flex;
+    flex-direction: column;
 }
 
 .pokemon-card .types {
@@ -39,3 +41,11 @@
     text-transform: capitalize;
 }
 
+ .pokemon-number {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.pokemon-name {
+    font-size: 1.2rem;
+}

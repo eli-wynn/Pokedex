@@ -67,6 +67,50 @@ button:hover {
     transition: width 0.5s ease;
 }
 
+.ability-row {
+    background-color: #2a2d45;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.ability-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.ability-name {
+    font-size: 1rem;
+    text-transform: capitalize;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.ability-type {
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 2px 8px;
+    text-transform: capitalize;
+}
+
+.ability-type.normal {
+    background-color: var(--type-normal);
+    color: #000;
+}
+
+.ability-type.hidden {
+    background-color: var(--type-ghost);
+    color: #fff;
+}
+
+.ability-description {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
 .detail-moves ul {
     display: flex;
     flex-wrap: wrap;

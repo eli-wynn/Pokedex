@@ -8,6 +8,7 @@ function PokemonDetail() {
     const navigate = useNavigate()
     const [pokemon, setPokemon] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [abilityDetails, setAbilityDetails] = useState(true)
 
     useEffect(() => {
         const fetchPokemon = async () => {
@@ -22,6 +23,25 @@ function PokemonDetail() {
         }
         fetchPokemon()
     }, [id])
+
+    useEffect(() => {
+        if (!pokemon) return
+        const fetchAbilities = async () => {
+            const details = {}
+            await Promise.all(
+                pokemon.abilities.map(async (a) => {
+                    try {
+                        const res = await axios.get(`http://localhost:5000/api/ability/${a.ability}`)
+                        details[a.ability] = res.data.description
+                    } catch (err) {
+                        console.error(`Failed to fetch ability ${a.ability}`, err)
+                    }
+                })
+            )
+            setAbilityDetails(details)
+        }
+        fetchAbilities()
+    }, [pokemon])
 
     if (loading) return <p>Loading...</p>
     if (!pokemon) return <p>Pokémon not found.</p>
@@ -46,6 +66,10 @@ function PokemonDetail() {
                 </div>
             </div>
 
+            <div className="detail-description">
+                <p>{pokemon.description}</p>
+            </div>
+
             <div className="detail-stats">
                 <h2>Base Stats</h2>
                 {pokemon.stats.map(stat => (
@@ -58,6 +82,23 @@ function PokemonDetail() {
                                 style={{ width: `${(stat.value / 255) * 100}%` }}
                             />
                         </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="detail-abilities">
+                <h2>Abilities</h2>
+                 {pokemon.abilities.map(ability => (
+                    <div key={ability.ability} className="ability-row">
+                        <div className="ability-header">
+                            <span className="ability-name">{ability.ability}</span>
+                            <span className={`ability-type ${ability.hidden ? 'hidden' : 'normal'}`}>
+                                {ability.hidden ? 'hidden' : 'normal'}
+                            </span>
+                        </div>
+                        <p className="ability-description">
+                            {abilityDetails[ability.ability] || 'Loading...'}
+                        </p>
                     </div>
                 ))}
             </div>
