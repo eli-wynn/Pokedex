@@ -189,3 +189,57 @@ button:hover {
     display: flex;
     gap: 10px;
 }
+
+.rarity-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+.rarity-badge.legendary {
+    background: linear-gradient(135deg, #f5af19, #f12711);
+    color: #fff;
+}
+
+.rarity-badge.mythical {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: #fff;
+}
+
+.sprite-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.sprite-container.legendary::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(#f5af19, #f12711, #f5af19, #f12711, #f5af19);
+    animation: rotate-ring 2s linear infinite;
+    z-index: -1;
+}
+
+.sprite-container.mythical::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(#a18cd1, #fbc2eb, #a18cd1, #fbc2eb, #a18cd1);
+    animation: rotate-ring 2s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotate-ring {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

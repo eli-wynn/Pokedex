@@ -59,7 +59,7 @@ function PokemonDetail() {
                 <button onClick={() => navigate('/')}>Home</button>
             </div>
                 <div className="detail-header">
-                    <div className="sprite-container" style={spriteStyle}>
+                    <div className={`sprite-container ${pokemon.isLegendary ? 'legendary' : pokemon.isMythical ? 'mythical' : ''}`} style={spriteStyle}>
                         <img src={isShiny ? pokemon.sprite_shiny : pokemon.sprite} alt={pokemon.name} />
                         {isShiny && <span className="shiny-label">✨</span>}
                     </div>
@@ -72,6 +72,12 @@ function PokemonDetail() {
                                 </span>
                             ))}
                         </div>
+                        {pokemon.isLegendary && (
+                            <span className="rarity-badge legendary">⭐ Legendary</span>
+                        )}
+                        {pokemon.isMythical && (
+                            <span className="rarity-badge mythical">✨ Mythical</span>
+                        )}
                         <p>Height: {pokemon.height / 10}m</p>
                         <p>Weight: {pokemon.weight / 10}kg</p>
                         <p>Generation: {pokemon.generation}</p>

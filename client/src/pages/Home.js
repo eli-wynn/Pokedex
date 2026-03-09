@@ -18,6 +18,7 @@ function Home() {
     const { pokemonDetails, registerDetails } = usePokemon()
     const search = searchParams.get('search') || ''
     const selectedType = searchParams.get('type') || ''
+    const selectedRarity = searchParams.get('rarity') || ''
     const [selectedGens, setSelectedGens] = useState([])
     const gridRef = useRef(null)
 
@@ -33,6 +34,14 @@ function Home() {
         setSearchParams(prev => {
             if (value) prev.set('type', value)
             else prev.delete('type')
+            return prev
+        })
+    }
+
+    const setSelectedRarity = (value) => {
+        setSearchParams(prev => {
+            if (value) prev.set('rarity', value)
+            else prev.delete('rarity')
             return prev
         })
     }
@@ -98,7 +107,11 @@ function Home() {
         const matchesType = !selectedType ||
             (details && details.types.includes(selectedType))
 
-        return matchesSearch && matchesType
+        const matchesRarity = !selectedRarity ||
+            (selectedRarity === 'legendary' && details?.isLegendary) ||
+            (selectedRarity === 'mythical' && details?.isMythical)
+
+        return matchesSearch && matchesType && matchesRarity
     })
 
     if (loading) return <p>Loading Pokédex...</p>
@@ -110,6 +123,17 @@ function Home() {
                 <SearchBar search={search} setSearch={setSearch} />
                 <TypeFilter types={types} selectedType={selectedType} setSelectedType={setSelectedType} />
                 <GenFilter selectedGens={selectedGens} setSelectedGens={setSelectedGens} />
+                <div className="rarity-filter">
+                    {['', 'legendary', 'mythical'].map(rarity => (
+                        <button
+                            key={rarity || 'all'}
+                            className={`rarity-button ${selectedRarity === rarity ? 'active' : ''}`}
+                            onClick={() => setSelectedRarity(rarity)}
+                        >
+                            {rarity === '' ? 'All' : rarity.charAt(0).toUpperCase() + rarity.slice(1)}
+                        </button>
+                    ))}
+                </div>
             </div>
             <div className="pokemon-grid" ref={gridRef}>
                 {filteredPokemon.length > 0

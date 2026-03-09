@@ -92,7 +92,10 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
             height: data.height,
             weight: data.weight,
             generation: generationMap[generation] || generation,
-            evolutionChain: parseEvolutionChain(evolutionChainRes.data.chain)
+            evolutionChain: parseEvolutionChain(evolutionChainRes.data.chain),
+            isLegendary: species.is_legendary,
+            isMythical: species.is_mythical
+
         }
 
         cache.set(id, result)

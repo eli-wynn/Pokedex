@@ -23,3 +23,23 @@ h1{
     gap: 20px;
     width: 100%;
 }
+
+.rarity-filter {
+    display: flex;
+    gap: 8px;
+}
+
+.rarity-button {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--primary-color);
+    background-color: #2a2d45;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: background-color 0.2s ease;
+}
+
+.rarity-button.active {
+    background-color: var(--primary-color);
+}
