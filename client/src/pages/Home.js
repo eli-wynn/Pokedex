@@ -4,9 +4,9 @@ import PokemonCard from '../components/PokemonCard'
 import SearchBar from '../components/SearchBar'
 import TypeFilter from '../components/TypeFilter'
 import './Home.css'
-import { useSearchParams, useLocation } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { usePokemon } from '../context/PokemonContext'
-import GenFilter, { GENERATIONS } from '../components/GenFilter'
+import GenFilter from '../components/GenFilter'
 
 function Home() {
     const [pokemon, setPokemon] = useState([])
@@ -17,7 +17,6 @@ function Home() {
         return saved ? JSON.parse(saved) : []
     })
     const [searchParams, setSearchParams] = useSearchParams()
-    const location = useLocation()
     const { pokemonDetails, registerDetails } = usePokemon()
     const gridRef = useRef(null)
 

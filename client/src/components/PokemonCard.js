@@ -24,7 +24,7 @@ function PokemonCard({ name, url, onDetailsLoaded }) {
             }
         }
         fetchDetails()
-    }, [id])
+    }, [id, name, cached, onDetailsLoaded, registerDetails])
 
     if (!details) return <div className="pokemon-card loading">Loading...</div>
 
