@@ -13,7 +13,7 @@ function PokemonDetail() {
     useEffect(() => {
         const fetchPokemon = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/pokemon/${id}`)
+                const res = await axios.get(`${process.env.URL}/api/pokemon/${id}`)
                 setPokemon(res.data)
             } catch (err) {
                 console.error('Failed to fetch pokemon details', err)
@@ -31,7 +31,7 @@ function PokemonDetail() {
             await Promise.all(
                 pokemon.abilities.map(async (a) => {
                     try {
-                        const res = await axios.get(`http://localhost:5000/api/ability/${a.ability}`)
+                        const res = await axios.get(`${process.env.URL}/api/ability/${a.ability}`)
                         details[a.ability] = res.data.description
                     } catch (err) {
                         console.error(`Failed to fetch ability ${a.ability}`, err)
