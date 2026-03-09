@@ -71,6 +71,7 @@ function PokemonDetail() {
                         </div>
                         <p>Height: {pokemon.height / 10}m</p>
                         <p>Weight: {pokemon.weight / 10}kg</p>
+                        <p>Generation: {pokemon.generation}</p>
                     </div>
                 </div>
 

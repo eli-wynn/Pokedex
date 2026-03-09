@@ -10,7 +10,8 @@ const POKEAPI = 'https://pokeapi.co/api/v2'
 // Get all Pokemon
 router.get('/pokemon', async (req, res) => {
     try {
-        const response = await axios.get(`${POKEAPI}/pokemon?limit=151`)
+        const { offset = 0, limit = 905 } = req.query
+        const response = await axios.get(`${POKEAPI}/pokemon?offset=${offset}&limit=${limit}`)
         res.json(response.data.results)
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch Pokemon' })
@@ -21,10 +22,6 @@ router.get('/pokemon', async (req, res) => {
 router.get('/pokemon/:id', async (req, res) => {
     try {
         const { id } = req.params
-
-        // const cached = cache.get(id)
-        // if (cached) return res.json(cached)
-
         const cached = cache.get(id)
         if (cached) {
             console.log(`Cache hit for ${id}`)
@@ -38,6 +35,19 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
         ])
         const data = pokemonRes.data
         const species = speciesRes.data
+        const generation = species.generation.name
+        const generationMap = {
+            'generation-i': 'Generation I',
+            'generation-ii': 'Generation II',
+            'generation-iii': 'Generation III',
+            'generation-iv': 'Generation IV',
+            'generation-v': 'Generation V',
+            'generation-vi': 'Generation VI',
+            'generation-vii': 'Generation VII',
+            'generation-viii': 'Generation VIII',
+            'generation-ix': 'Generation IX',
+        }
+
 
         const description = species.flavor_text_entries
             .find(e => e.language.name === 'en')
@@ -66,9 +76,11 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
             })),
             height: data.height,
             weight: data.weight,
+            generation: generationMap[generation] || generation
         }
 
         cache.set(id, result)
+        console.log('generation:', result.generation)
         res.json(result)
 
     } catch (error) {

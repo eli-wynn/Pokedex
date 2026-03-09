@@ -1,0 +1,50 @@
+.gen-filter {
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 5px 10px;
+    background-color: #2a2d45;
+    color: var(--secondary-color);
+    width: 150px;
+    position: relative;
+    cursor: pointer;
+    font-family: var(--font-family);
+}
+
+.gen-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gen-arrow {
+    font-size: 0.7rem;
+}
+
+.gen-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #2a2d45;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    margin-top: 5px;
+    z-index: 100;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.gen-option {
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.gen-option:hover {
+    background-color: #3a3f5c;
+}
+
+.gen-option.active {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}

@@ -6,6 +6,7 @@ import TypeFilter from '../components/TypeFilter'
 import './Home.css'
 import { useSearchParams, useLocation } from 'react-router-dom'
 import { usePokemon } from '../context/PokemonContext'
+import GenFilter, { GENERATIONS } from '../components/GenFilter'
 
 function Home() {
     console.log('Home component rendered')
@@ -17,6 +18,7 @@ function Home() {
     const { pokemonDetails, registerDetails } = usePokemon()
     const search = searchParams.get('search') || ''
     const selectedType = searchParams.get('type') || ''
+    const [selectedGens, setSelectedGens] = useState([])
     const gridRef = useRef(null)
 
     const setSearch = (value) => {
@@ -57,12 +59,25 @@ function Home() {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true)
             try {
-                const [pokemonRes, typesRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/pokemon'),
+                // if no gens selected, fetch everything
+                const gensToFetch = selectedGens.length > 0
+                    ? selectedGens
+                    : [{ offset: 0, limit: 905 }]
+
+                const [pokemonResults, typesRes] = await Promise.all([
+                    Promise.all(
+                        gensToFetch.map(gen =>
+                            axios.get(`http://localhost:5000/api/pokemon?offset=${gen.offset}&limit=${gen.limit}`)
+                        )
+                    ),
                     axios.get('http://localhost:5000/api/types')
                 ])
-                setPokemon(pokemonRes.data)
+
+                const combined = pokemonResults.flatMap(r => r.data)
+                const unique = [...new Map(combined.map(p => [p.name, p])).values()]
+                setPokemon(unique)
                 setTypes(typesRes.data)
             } catch (err) {
                 console.error('Failed to fetch data', err)
@@ -71,7 +86,7 @@ function Home() {
             }
         }
         fetchData()
-    }, [])
+    }, [selectedGens])
 
     const filteredPokemon = pokemon.filter(p => {
         const id = p.url.split('/').slice(-2, -1)[0]
@@ -94,6 +109,7 @@ function Home() {
             <div className="filters">
                 <SearchBar search={search} setSearch={setSearch} />
                 <TypeFilter types={types} selectedType={selectedType} setSelectedType={setSelectedType} />
+                <GenFilter selectedGens={selectedGens} setSelectedGens={setSelectedGens} />
             </div>
             <div className="pokemon-grid" ref={gridRef}>
                 {filteredPokemon.length > 0
