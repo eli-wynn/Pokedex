@@ -9,18 +9,21 @@ import { usePokemon } from '../context/PokemonContext'
 import GenFilter, { GENERATIONS } from '../components/GenFilter'
 
 function Home() {
-    console.log('Home component rendered')
     const [pokemon, setPokemon] = useState([])
     const [types, setTypes] = useState([])
     const [loading, setLoading] = useState(true)
+    const [selectedGens, setSelectedGens] = useState(() => {
+        const saved = sessionStorage.getItem('selectedGens')
+        return saved ? JSON.parse(saved) : []
+    })
     const [searchParams, setSearchParams] = useSearchParams()
     const location = useLocation()
     const { pokemonDetails, registerDetails } = usePokemon()
+    const gridRef = useRef(null)
+
     const search = searchParams.get('search') || ''
     const selectedType = searchParams.get('type') || ''
     const selectedRarity = searchParams.get('rarity') || ''
-    const [selectedGens, setSelectedGens] = useState([])
-    const gridRef = useRef(null)
 
     const setSearch = (value) => {
         setSearchParams(prev => {
@@ -46,6 +49,11 @@ function Home() {
         })
     }
 
+    // save selectedGens to sessionStorage whenever it changes
+    useEffect(() => {
+        sessionStorage.setItem('selectedGens', JSON.stringify(selectedGens))
+    }, [selectedGens])
+
     // restore scroll position when navigating back
     useEffect(() => {
         if (loading || !gridRef.current) return
@@ -57,7 +65,7 @@ function Home() {
             const gridHeight = gridRef.current?.scrollHeight
             if (gridHeight > window.innerHeight) {
                 window.scrollTo(0, parseInt(savedScroll))
-                sessionStorage.removeItem('scrollY') // clear after restoring
+                sessionStorage.removeItem('scrollY')
                 observer.disconnect()
             }
         })
@@ -70,7 +78,6 @@ function Home() {
         const fetchData = async () => {
             setLoading(true)
             try {
-                // if no gens selected, fetch everything
                 const gensToFetch = selectedGens.length > 0
                     ? selectedGens
                     : [{ offset: 0, limit: 905 }]
