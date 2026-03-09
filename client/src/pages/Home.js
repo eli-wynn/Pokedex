@@ -125,7 +125,6 @@ function Home() {
     return (
         
         <div className="home">
-            <p>{process.env.REACT_APP_API_URL}</p>
             <h1>Eli's Pokédex</h1>
             <div className="filters">
                 <SearchBar search={search} setSearch={setSearch} />
