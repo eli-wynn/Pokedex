@@ -84,10 +84,10 @@ function Home() {
                 const [pokemonResults, typesRes] = await Promise.all([
                     Promise.all(
                         gensToFetch.map(gen =>
-                            axios.get(`${process.env.URL}/api/pokemon?offset=${gen.offset}&limit=${gen.limit}`)
+                            axios.get(`${process.env.REACT_APP_API_URL}/api/pokemon?offset=${gen.offset}&limit=${gen.limit}`)
                         )
                     ),
-                    axios.get(`${process.env.URL}/api/types`)
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/types`)
                 ])
 
                 const combined = pokemonResults.flatMap(r => r.data)

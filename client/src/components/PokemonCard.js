@@ -15,7 +15,7 @@ function PokemonCard({ name, url, onDetailsLoaded }) {
         if (cached) return // already have details, skip fetch
         const fetchDetails = async () => {
             try {
-                const res = await axios.get(`${process.env.URL}/api/pokemon/${id}`)
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/pokemon/${id}`)
                 setDetails(res.data)
                 registerDetails(id, res.data)
                 onDetailsLoaded(id, res.data)
