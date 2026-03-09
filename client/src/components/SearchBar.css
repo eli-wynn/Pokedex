@@ -1,0 +1,21 @@
+.search-bar {
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 5px 10px; 
+    background-color: #2a2d45;
+    color: var(--secondary-color);
+    width: 400px;
+}
+
+.search-bar input {
+    outline: none;
+    background-color: #2a2d45;
+    font-family: var(--font-family);
+    color: var(--secondary-color);
+    border: none;
+    width: 100%;
+}
+
+.search-bar input:focus {
+    box-shadow: 0 0 8px var(--primary-color);
+}

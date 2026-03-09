@@ -1,0 +1,99 @@
+
+:root{
+  --primary-color: #D33E43;
+  --secondary-color: #FAF3DD;
+  --background-color:  #1C1F33;
+  --font-family: 'Quantico', sans-serif; 
+
+   /* Type Colours */
+  --type-fire: #EE8130;
+  --type-water: #6390F0;
+  --type-grass: #7AC74C;
+  --type-electric: #F7D02C;
+  --type-normal: #A8A77A;
+  --type-ice: #96D9D6;
+  --type-fighting: #C22E28;
+  --type-poison: #A33EA1;
+  --type-ground: #E2BF65;
+  --type-flying: #A98FF3;
+  --type-psychic: #F95587;
+  --type-bug: #A6B91A;
+  --type-rock: #B6A136;
+  --type-ghost: #735797;
+  --type-dragon: #6F35FC;
+  --type-dark: #705746;
+  --type-steel: #B7B7CE;
+  --type-fairy: #D685AD;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--secondary-color);
+  font-family: var(--font-family);
+  font-optical-sizing: auto; 
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.type-badge.fire {
+    background-color: var(--type-fire);
+}
+.type-badge.water {
+    background-color: var(--type-water);
+}
+.type-badge.grass {
+    background-color: var(--type-grass);
+}
+.type-badge.electric {
+    background-color: var(--type-electric);
+}
+.type-badge.normal {
+    background-color: var(--type-normal);
+}
+.type-badge.ice {
+    background-color: var(--type-ice);
+}
+.type-badge.fighting {
+    background-color: var(--type-fighting);
+}
+.type-badge.poison {
+    background-color: var(--type-poison);
+}
+.type-badge.ground {
+    background-color: var(--type-ground);
+}
+.type-badge.flying {
+    background-color: var(--type-flying);
+}
+.type-badge.psychic {
+    background-color: var(--type-psychic);
+}
+.type-badge.bug {
+    background-color: var(--type-bug);
+}
+.type-badge.rock {
+    background-color: var(--type-rock);
+}
+.type-badge.ghost {
+    background-color: var(--type-ghost);
+}
+.type-badge.dragon {
+    background-color: var(--type-dragon);
+}
+.type-badge.dark {
+    background-color: var(--type-dark);
+}
+.type-badge.steel {
+    background-color: var(--type-steel);
+}
+.type-badge.fairy {
+    background-color: var(--type-fairy);
+}
+
+

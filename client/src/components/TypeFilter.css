@@ -1,0 +1,32 @@
+.type-filter {
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 5px 10px; 
+    background-color: #2a2d45;
+    color: var(--secondary-color);
+    width: 150px;
+    position: relative;
+}
+
+.dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dropdown-list {
+    position: absolute;
+    background-color: #2a2d45;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    margin-top: 5px;
+    width: 150px;
+    z-index: 100;
+    left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 8px;
+    box-sizing: border-box;
+}
