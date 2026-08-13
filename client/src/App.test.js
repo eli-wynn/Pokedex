@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders the Pokedex without crashing', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  // Home starts in its loading state synchronously, before the Pokemon
+  // list fetch (unmocked here) resolves.
+  expect(screen.getByText(/Loading Pokédex/i)).toBeInTheDocument();
 });

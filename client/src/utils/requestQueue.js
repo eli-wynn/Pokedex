@@ -11,6 +11,7 @@ const BASE_DELAY_MS = 400
 
 let activeCount = 0
 const queue = []
+const inFlight = new Map()
 
 function runNext() {
     if (activeCount >= MAX_CONCURRENT || queue.length === 0) return
@@ -50,8 +51,23 @@ async function withRetry(fn) {
     }
 }
 
-// Concurrency-limited, retrying GET. Use for bursty per-item fetches
-// (e.g. one call per rendered card) instead of raw axios.get.
+// Concurrency-limited, retrying, deduped GET. Use for bursty per-item
+// fetches (e.g. one call per rendered card) instead of raw axios.get.
+// Deduping matters here specifically: a card's own mount effect and any
+// bulk background fetch (e.g. "load everything so a filter can search it")
+// can both ask for the same id while a request is still in flight; without
+// this they'd double up and re-trigger the same amplification bug fixed
+// elsewhere in this file's callers.
 export function queuedGet(url, config) {
-    return enqueue(() => withRetry(() => axios.get(url, config)))
+    if (inFlight.has(url)) return inFlight.get(url)
+    const promise = enqueue(() => withRetry(() => axios.get(url, config)))
+    inFlight.set(url, promise)
+    // Deferred via setTimeout (a macrotask) rather than chained onto the
+    // promise directly (a microtask): callers' own .then() handlers -
+    // e.g. registerDetails - are also microtasks queued off this same
+    // promise, and a plain .finally() here could run its cleanup before
+    // them, reopening a window where a second caller sees neither a
+    // cached result nor an in-flight entry and fires a duplicate request.
+    promise.finally(() => setTimeout(() => inFlight.delete(url), 0))
+    return promise
 }

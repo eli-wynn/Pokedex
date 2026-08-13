@@ -1,0 +1,12 @@
+{
+  "name": "pokedex-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cross-browser end-to-end tests for the Pokedex app (client + server)",
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

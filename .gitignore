@@ -1,0 +1,4 @@
+# e2e tooling (root-level, added for cross-browser Playwright tests)
+/node_modules
+/playwright-report
+/test-results

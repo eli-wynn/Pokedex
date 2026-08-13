@@ -4,7 +4,7 @@ import { usePokemon } from '../context/PokemonContext'
 import { queuedGet } from '../utils/requestQueue'
 import './PokemonCard.css'
 
-function PokemonCard({ name, url }) {
+function PokemonCard({ name, url, rowIndex }) {
     const { pokemonDetails, registerDetails } = usePokemon()
     const navigate = useNavigate()
     const id = url.split('/').slice(-2, -1)[0]
@@ -35,7 +35,9 @@ function PokemonCard({ name, url }) {
 
     return (
         <div className="pokemon-card" onClick={() => {
-            sessionStorage.setItem('scrollY', window.scrollY)
+            // Row index (not raw scrollY) survives the virtualized grid
+            // re-measuring row heights on remount.
+            if (rowIndex != null) sessionStorage.setItem('scrollRowIndex', rowIndex)
             navigate(`/pokemon/${id}`)
         }}>
             <img className="pokemon-image" src={details.sprite} alt={details.name} />

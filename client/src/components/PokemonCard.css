@@ -7,6 +7,18 @@
     background-color: #2a2d45;
 }
 
+/* Reserves roughly the same footprint as a resolved card (image + heading +
+   type badges) so a card popping in from "Loading..." doesn't reflow the
+   page - this is what the virtualized grid's row-height measurement also
+   relies on being stable. */
+.pokemon-card.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
 .pokemon-card:hover {
     transform: scale(1.05);
 }
