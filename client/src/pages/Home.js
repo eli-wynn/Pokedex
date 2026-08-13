@@ -17,7 +17,7 @@ function Home() {
         return saved ? JSON.parse(saved) : []
     })
     const [searchParams, setSearchParams] = useSearchParams()
-    const { pokemonDetails, registerDetails } = usePokemon()
+    const { pokemonDetails } = usePokemon()
     const gridRef = useRef(null)
 
     const search = searchParams.get('search') || ''
@@ -149,7 +149,6 @@ function Home() {
                             key={p.name}
                             name={p.name}
                             url={p.url}
-                            onDetailsLoaded={registerDetails}
                         />
                     ))
                     : <p>No Pokémon found.</p>

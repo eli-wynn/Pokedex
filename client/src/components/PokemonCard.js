@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { usePokemon } from '../context/PokemonContext'
+import { queuedGet } from '../utils/requestQueue'
 import './PokemonCard.css'
 
-function PokemonCard({ name, url, onDetailsLoaded }) {
+function PokemonCard({ name, url }) {
     const { pokemonDetails, registerDetails } = usePokemon()
     const navigate = useNavigate()
     const id = url.split('/').slice(-2, -1)[0]
@@ -12,19 +12,24 @@ function PokemonCard({ name, url, onDetailsLoaded }) {
     const [details, setDetails] = useState(cached || null)
 
     useEffect(() => {
-        if (cached) return // already have details, skip fetch
+        if (cached) {
+            setDetails(cached)
+            return // already have details, skip fetch
+        }
+        let cancelled = false
         const fetchDetails = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/pokemon/${id}`)
+                const res = await queuedGet(`${process.env.REACT_APP_API_URL}/api/pokemon/${id}`)
+                if (cancelled) return
                 setDetails(res.data)
                 registerDetails(id, res.data)
-                onDetailsLoaded(id, res.data)
             } catch (err) {
-                console.error(`Failed to fetch details for ${name}`, err)
+                if (!cancelled) console.error(`Failed to fetch details for ${name}`, err)
             }
         }
         fetchDetails()
-    }, [id, name, cached, onDetailsLoaded, registerDetails])
+        return () => { cancelled = true }
+    }, [id, name, cached, registerDetails])
 
     if (!details) return <div className="pokemon-card loading">Loading...</div>
 
