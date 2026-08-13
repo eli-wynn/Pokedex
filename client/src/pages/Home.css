@@ -45,6 +45,15 @@ h1{
     background-color: var(--primary-color);
 }
 
+.fetch-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0;
+    text-align: center;
+}
+
 /* Coarse pointer = touch. Screen width alone doesn't tell you input method
    (a touchscreen laptop is still "desktop"-sized), so target the input type
    directly rather than gating this behind a viewport breakpoint. */

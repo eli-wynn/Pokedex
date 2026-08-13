@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePokemon } from '../context/PokemonContext'
 import { queuedGet } from '../utils/requestQueue'
@@ -73,7 +73,7 @@ function PokemonCard({ name, url, rowIndex }) {
                 if (e.key === 'Enter') goToDetail()
             }}
         >
-            <img className="pokemon-image" src={details.sprite} alt={details.name} />
+            <img className="pokemon-image" src={details.sprite} alt={details.name} loading="lazy" />
             <h3>
                 <span className="pokemon-number">#{String(details.id).padStart(3, '0')}</span>
                 <span className="pokemon-name">{details.name}</span>
@@ -89,4 +89,4 @@ function PokemonCard({ name, url, rowIndex }) {
     )
 }
 
-export default PokemonCard
+export default memo(PokemonCard)

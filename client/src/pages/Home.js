@@ -79,9 +79,9 @@ function Home() {
 
     // track available width so the virtualized rows use the same column
     // count the .pokemon-grid CSS (auto-fill) would have produced. Observes
-    // the always-mounted .home container (not the grid itself, which
-    // unmounts whenever a search/filter yields zero results) so resizes
-    // during an empty-results state aren't missed.
+    // the always-mounted .home container (never conditionally removed, so
+    // this only needs to run once - the ResizeObserver itself handles every
+    // subsequent resize, including loading/error/empty-results states).
     useLayoutEffect(() => {
         if (!homeRef.current) return
         const el = homeRef.current
@@ -91,7 +91,7 @@ function Home() {
         observer.observe(el)
         setContainerWidth(el.getBoundingClientRect().width)
         return () => observer.disconnect()
-    }, [loading])
+    }, [])
 
     useLayoutEffect(() => {
         gridOffsetRef.current = gridRef.current?.offsetTop ?? 0
@@ -202,21 +202,58 @@ function Home() {
         return () => cancelAnimationFrame(raf)
     }, [loading, rows.length, rowVirtualizer])
 
-    if (loading) return <p>Loading Pokédex...</p>
-
-    if (fetchError) {
-        return (
-            <div className="home">
+    // Loading/error/empty only ever swap the grid area below, never the
+    // header or filters - a generation-filter change used to set `loading`
+    // and unmount the entire page (including GenFilter's own open/closed
+    // dropdown state) on every single click, forcing a full-screen flash
+    // and closing the dropdown mid multi-select. The filters now stay
+    // mounted across every refetch.
+    let content
+    if (loading) {
+        content = <p>Loading Pokémon...</p>
+    } else if (fetchError) {
+        content = (
+            <div className="fetch-error">
                 <p>Couldn't load the Pokédex. Check your connection and try again.</p>
                 <button type="button" onClick={() => setFetchAttempt(a => a + 1)}>
                     Retry
                 </button>
             </div>
         )
+    } else if (filteredPokemon.length > 0) {
+        content = (
+            <div ref={gridRef} style={{ position: 'relative', width: '100%', height: rowVirtualizer.getTotalSize() }}>
+                {rowVirtualizer.getVirtualItems().map(virtualRow => (
+                    <div
+                        key={virtualRow.key}
+                        data-index={virtualRow.index}
+                        ref={rowVirtualizer.measureElement}
+                        className="pokemon-grid"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
+                        }}
+                    >
+                        {rows[virtualRow.index].map(p => (
+                            <PokemonCard
+                                key={p.name}
+                                name={p.name}
+                                url={p.url}
+                                rowIndex={virtualRow.index}
+                            />
+                        ))}
+                    </div>
+                ))}
+            </div>
+        )
+    } else {
+        content = <p>No Pokémon found.</p>
     }
 
     return (
-
         <div className="home" ref={homeRef}>
             <h1>Eli's Pokédex</h1>
             <div className="filters">
@@ -236,37 +273,7 @@ function Home() {
                 </div>
             </div>
             <h2 className="visually-hidden">Pokémon list</h2>
-            {filteredPokemon.length > 0
-                ? (
-                    <div ref={gridRef} style={{ position: 'relative', width: '100%', height: rowVirtualizer.getTotalSize() }}>
-                        {rowVirtualizer.getVirtualItems().map(virtualRow => (
-                            <div
-                                key={virtualRow.key}
-                                data-index={virtualRow.index}
-                                ref={rowVirtualizer.measureElement}
-                                className="pokemon-grid"
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
-                                }}
-                            >
-                                {rows[virtualRow.index].map(p => (
-                                    <PokemonCard
-                                        key={p.name}
-                                        name={p.name}
-                                        url={p.url}
-                                        rowIndex={virtualRow.index}
-                                    />
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                )
-                : <p>No Pokémon found.</p>
-            }
+            {content}
         </div>
     )
 }

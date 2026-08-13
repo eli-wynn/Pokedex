@@ -68,8 +68,15 @@ button:hover {
 .stat-row .stat-bar .stat-fill {
     background-color: var(--primary-color);
     height: 100%;
-    border-radius: 10px;
-    transition: width 0.5s ease;
+    width: 100%;
+    /* Rounded only on the growing (left) edge: scaleX would otherwise
+       horizontally squash a right-side curve at low fill percentages,
+       since the radius is computed on the pre-transform box. */
+    border-radius: 10px 0 0 10px;
+    transform-origin: left;
+    /* transform (compositor-only) instead of width (triggers layout) - the
+       fill is always full-width and visually scaled down instead. */
+    transition: transform 0.5s ease;
 }
 
 .ability-row {

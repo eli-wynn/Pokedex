@@ -122,7 +122,7 @@ function PokemonDetail() {
                         <div className="stat-bar">
                             <div
                                 className="stat-fill"
-                                style={{ width: `${(stat.value / 255) * 100}%` }}
+                                style={{ transform: `scaleX(${stat.value / 255})` }}
                             />
                         </div>
                     </div>
@@ -166,6 +166,7 @@ function PokemonDetail() {
                                 <img
                                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.id}.png`}
                                     alt={evo.name}
+                                    loading="lazy"
                                 />
                                 <span>{evo.name}</span>
                             </div>
