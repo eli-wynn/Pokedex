@@ -23,13 +23,9 @@ router.get('/pokemon/:id', async (req, res) => {
     try {
         const { id } = req.params
         const cached = cache.get(id)
-        if (cached) {
-            console.log(`Cache hit for ${id}`)
-            return res.json(cached)
-        }
-console.log(`Cache miss for ${id} - fetching from PokéAPI`)
+        if (cached) return res.json(cached)
 
-       const [pokemonRes, speciesRes] = await Promise.all([
+        const [pokemonRes, speciesRes] = await Promise.all([
             axios.get(`${POKEAPI}/pokemon/${id}`),
             axios.get(`${POKEAPI}/pokemon-species/${id}`)
         ])
@@ -68,7 +64,9 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
             .find(e => e.language.name === 'en')
             ?.flavor_text
             .replace(/[\n\f]/g, ' ')
-        // console.log(data)
+            // Older PokeAPI flavor text carries a mixed-case "POKéMON" artifact
+            // from the original games' text rendering; normalize it.
+            .replace(/POK[ÉÈEé]MON/gi, 'Pokémon')
 
         const result = {
             id: data.id,
@@ -99,7 +97,6 @@ console.log(`Cache miss for ${id} - fetching from PokéAPI`)
         }
 
         cache.set(id, result)
-        console.log('generation:', result.generation)
         res.json(result)
 
     } catch (error) {
