@@ -1,10 +1,11 @@
 .search-bar {
     border: 1px solid var(--primary-color);
     border-radius: 8px;
-    padding: 5px 10px; 
+    padding: 5px 10px;
     background-color: #2a2d45;
     color: var(--secondary-color);
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
 }
 
 .search-bar input {
@@ -18,4 +19,10 @@
 
 .search-bar input:focus {
     box-shadow: 0 0 8px var(--primary-color);
+}
+
+@media (max-width: 480px) {
+    .search-bar {
+        max-width: none;
+    }
 }

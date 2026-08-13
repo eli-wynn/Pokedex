@@ -48,3 +48,16 @@
     background-color: var(--primary-color);
     color: var(--secondary-color);
 }
+
+@media (pointer: coarse) {
+    .gen-toggle {
+        min-height: 44px;
+    }
+
+    .gen-option {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+    }
+}

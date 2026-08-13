@@ -30,3 +30,16 @@
     padding: 8px;
     box-sizing: border-box;
 }
+
+@media (pointer: coarse) {
+    .dropdown-toggle {
+        min-height: 44px;
+    }
+
+    .dropdown-list .type-badge {
+        min-height: 32px;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+    }
+}

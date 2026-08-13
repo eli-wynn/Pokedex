@@ -243,3 +243,30 @@ button:hover {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+@media (pointer: coarse) {
+    button {
+        min-height: 44px;
+    }
+}
+
+/* Content-driven: a 200px sprite next to a text column stops leaving room
+   for a readable name/stats block below this, on the phone widths this
+   detail page is actually opened at (it's one tap away from every card). */
+@media (max-width: 480px) {
+    .detail-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .detail-header img,
+    .sprite-container {
+        width: 140px;
+        height: 140px;
+    }
+
+    .stat-row .stat-name {
+        width: 90px;
+        font-size: 0.85rem;
+    }
+}
