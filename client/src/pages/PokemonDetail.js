@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { useParams, useNavigate } from 'react-router-dom'
 import './PokemonDetail.css'
@@ -8,42 +8,67 @@ function PokemonDetail() {
     const navigate = useNavigate()
     const [pokemon, setPokemon] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const [fetchAttempt, setFetchAttempt] = useState(0)
     const [abilityDetails, setAbilityDetails] = useState({})
+    const [abilityErrors, setAbilityErrors] = useState({})
     const [isShiny] = useState(() => Math.random() < 1/10)
+
     useEffect(() => {
+        let cancelled = false
         const fetchPokemon = async () => {
+            setLoading(true)
+            setError(false)
             try {
                 const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/pokemon/${id}`)
-                setPokemon(res.data)
+                if (!cancelled) setPokemon(res.data)
             } catch (err) {
                 console.error('Failed to fetch pokemon details', err)
+                if (!cancelled) setError(true)
             } finally {
-                setLoading(false)
+                if (!cancelled) setLoading(false)
             }
         }
         fetchPokemon()
-    }, [id])
+        return () => { cancelled = true }
+    }, [id, fetchAttempt])
+
+    // Fetches (and retries) one ability at a time, rather than one
+    // Promise.all batch that either resolves fully or silently drops
+    // failures, so a single flaky ability can be retried without refetching
+    // the others and without leaving its description stuck on "Loading...".
+    const fetchAbility = useCallback(async (abilityName) => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/ability/${abilityName}`)
+            setAbilityDetails(prev => ({ ...prev, [abilityName]: res.data.description }))
+            setAbilityErrors(prev => {
+                if (!prev[abilityName]) return prev
+                const next = { ...prev }
+                delete next[abilityName]
+                return next
+            })
+        } catch (err) {
+            console.error(`Failed to fetch ability ${abilityName}`, err)
+            setAbilityErrors(prev => ({ ...prev, [abilityName]: true }))
+        }
+    }, [])
 
     useEffect(() => {
         if (!pokemon) return
-        const fetchAbilities = async () => {
-            const details = {}
-            await Promise.all(
-                pokemon.abilities.map(async (a) => {
-                    try {
-                        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/ability/${a.ability}`)
-                        details[a.ability] = res.data.description
-                    } catch (err) {
-                        console.error(`Failed to fetch ability ${a.ability}`, err)
-                    }
-                })
-            )
-            setAbilityDetails(details)
-        }
-        fetchAbilities()
-    }, [pokemon])
+        pokemon.abilities.forEach(a => fetchAbility(a.ability))
+    }, [pokemon, fetchAbility])
 
     if (loading) return <p>Loading...</p>
+    if (error) {
+        return (
+            <div className="pokemon-detail">
+                <p>Couldn't load this Pokémon. Check your connection and try again.</p>
+                <button type="button" onClick={() => setFetchAttempt(a => a + 1)}>
+                    Retry
+                </button>
+            </div>
+        )
+    }
     if (!pokemon) return <p>Pokémon not found.</p>
 
     const spriteStyle = pokemon.types.length === 2
@@ -115,7 +140,15 @@ function PokemonDetail() {
                             </span>
                         </div>
                         <p className="ability-description">
-                            {abilityDetails[ability.ability] || 'Loading...'}
+                            {abilityErrors[ability.ability] ? (
+                                <button
+                                    type="button"
+                                    className="ability-retry"
+                                    onClick={() => fetchAbility(ability.ability)}
+                                >
+                                    Couldn't load — tap to retry
+                                </button>
+                            ) : (abilityDetails[ability.ability] || 'Loading...')}
                         </p>
                     </div>
                 ))}

@@ -73,7 +73,7 @@ button:hover {
 }
 
 .ability-row {
-    background-color: #2a2d45;
+    background-color: var(--surface-color);
     border-radius: 10px;
     padding: 12px;
     margin-bottom: 10px;
@@ -116,6 +116,18 @@ button:hover {
     margin: 0;
 }
 
+.ability-retry {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 1;
+}
+
 .detail-moves ul {
     display: flex;
     flex-wrap: wrap;
@@ -125,7 +137,7 @@ button:hover {
 }
 
 .detail-moves li {
-    background-color: #2a2d45;
+    background-color: var(--surface-color);
     border: 1px solid var(--primary-color);
     border-radius: 20px;
     padding: 5px 12px;
@@ -157,7 +169,7 @@ button:hover {
     cursor: pointer;
     padding: 10px;
     border-radius: 10px;
-    background-color: #2a2d45;
+    background-color: var(--surface-color);
     transition: transform 0.2s ease;
     text-transform: capitalize;
 }
@@ -242,6 +254,17 @@ button:hover {
 @keyframes rotate-ring {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+/* The ring runs forever on every legendary/mythical detail-page visit with
+   no way to pause it - freeze it (keep the gradient, drop the motion)
+   rather than removing the effect entirely, so rarity is still visually
+   distinguished for users who've asked for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+    .sprite-container.legendary::before,
+    .sprite-container.mythical::before {
+        animation: none;
+    }
 }
 
 @media (pointer: coarse) {

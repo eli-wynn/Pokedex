@@ -6,6 +6,7 @@ function SearchBar({ search, setSearch }) {
         <div className="search-bar">
             <input
                 type="text"
+                aria-label="Search Pokémon by name or number"
                 placeholder="Search by name or number..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

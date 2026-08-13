@@ -26,6 +26,8 @@ function Home() {
     const [pokemon, setPokemon] = useState([])
     const [types, setTypes] = useState([])
     const [loading, setLoading] = useState(true)
+    const [fetchError, setFetchError] = useState(false)
+    const [fetchAttempt, setFetchAttempt] = useState(0)
     const [selectedGens, setSelectedGens] = useState(() => {
         const saved = sessionStorage.getItem('selectedGens')
         return saved ? JSON.parse(saved) : []
@@ -98,6 +100,7 @@ function Home() {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
+            setFetchError(false)
             try {
                 const gensToFetch = selectedGens.length > 0
                     ? selectedGens
@@ -118,12 +121,13 @@ function Home() {
                 setTypes(typesRes.data)
             } catch (err) {
                 console.error('Failed to fetch data', err)
+                setFetchError(true)
             } finally {
                 setLoading(false)
             }
         }
         fetchData()
-    }, [selectedGens])
+    }, [selectedGens, fetchAttempt])
 
     // The type/rarity filters need every Pokemon's details (type, legendary/
     // mythical) to know what matches, but virtualization only fetches cards
@@ -200,8 +204,19 @@ function Home() {
 
     if (loading) return <p>Loading Pokédex...</p>
 
+    if (fetchError) {
+        return (
+            <div className="home">
+                <p>Couldn't load the Pokédex. Check your connection and try again.</p>
+                <button type="button" onClick={() => setFetchAttempt(a => a + 1)}>
+                    Retry
+                </button>
+            </div>
+        )
+    }
+
     return (
-        
+
         <div className="home" ref={homeRef}>
             <h1>Eli's Pokédex</h1>
             <div className="filters">
@@ -220,6 +235,7 @@ function Home() {
                     ))}
                 </div>
             </div>
+            <h2 className="visually-hidden">Pokémon list</h2>
             {filteredPokemon.length > 0
                 ? (
                     <div ref={gridRef} style={{ position: 'relative', width: '100%', height: rowVirtualizer.getTotalSize() }}>

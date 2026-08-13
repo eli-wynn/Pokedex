@@ -3,7 +3,8 @@
   --primary-color: #D33E43;
   --secondary-color: #FAF3DD;
   --background-color:  #1C1F33;
-  --font-family: 'Quantico', sans-serif; 
+  --surface-color: #2a2d45;
+  --font-family: 'Quantico', sans-serif;
 
    /* Type Colours */
   --type-fire: #EE8130;
@@ -41,23 +42,33 @@ body {
   padding: 20px;
 }
 
+/* Text color per type: white by default (base .type-badge rule in
+   PokemonCard.css), overridden to the app's dark background color wherever
+   white on that type's background falls below WCAG AA's 4.5:1 contrast
+   minimum. Computed from the exact --type-* hex values, not eyeballed. */
 .type-badge.fire {
     background-color: var(--type-fire);
+    color: var(--background-color);
 }
 .type-badge.water {
     background-color: var(--type-water);
+    color: var(--background-color);
 }
 .type-badge.grass {
     background-color: var(--type-grass);
+    color: var(--background-color);
 }
 .type-badge.electric {
     background-color: var(--type-electric);
+    color: var(--background-color);
 }
 .type-badge.normal {
     background-color: var(--type-normal);
+    color: var(--background-color);
 }
 .type-badge.ice {
     background-color: var(--type-ice);
+    color: var(--background-color);
 }
 .type-badge.fighting {
     background-color: var(--type-fighting);
@@ -67,18 +78,23 @@ body {
 }
 .type-badge.ground {
     background-color: var(--type-ground);
+    color: var(--background-color);
 }
 .type-badge.flying {
     background-color: var(--type-flying);
+    color: var(--background-color);
 }
 .type-badge.psychic {
     background-color: var(--type-psychic);
+    color: var(--background-color);
 }
 .type-badge.bug {
     background-color: var(--type-bug);
+    color: var(--background-color);
 }
 .type-badge.rock {
     background-color: var(--type-rock);
+    color: var(--background-color);
 }
 .type-badge.ghost {
     background-color: var(--type-ghost);
@@ -91,9 +107,25 @@ body {
 }
 .type-badge.steel {
     background-color: var(--type-steel);
+    color: var(--background-color);
 }
 .type-badge.fairy {
     background-color: var(--type-fairy);
+    color: var(--background-color);
+}
+
+/* Screen-reader-only: present in the accessibility tree without changing
+   any visible layout. Standard sr-only pattern. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 

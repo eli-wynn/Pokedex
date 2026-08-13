@@ -10,13 +10,17 @@ function PokemonCard({ name, url, rowIndex }) {
     const id = url.split('/').slice(-2, -1)[0]
     const cached = pokemonDetails[id]
     const [details, setDetails] = useState(cached || null)
+    const [failed, setFailed] = useState(false)
+    const [retryCount, setRetryCount] = useState(0)
 
     useEffect(() => {
         if (cached) {
             setDetails(cached)
+            setFailed(false)
             return // already have details, skip fetch
         }
         let cancelled = false
+        setFailed(false)
         const fetchDetails = async () => {
             try {
                 const res = await queuedGet(`${process.env.REACT_APP_API_URL}/api/pokemon/${id}`)
@@ -24,22 +28,51 @@ function PokemonCard({ name, url, rowIndex }) {
                 setDetails(res.data)
                 registerDetails(id, res.data)
             } catch (err) {
-                if (!cancelled) console.error(`Failed to fetch details for ${name}`, err)
+                if (!cancelled) {
+                    console.error(`Failed to fetch details for ${name}`, err)
+                    setFailed(true)
+                }
             }
         }
         fetchDetails()
         return () => { cancelled = true }
-    }, [id, name, cached, registerDetails])
+        // retryCount is intentionally in the deps: it exists only to force
+        // this effect to re-run when the user taps "retry" after the
+        // request queue's own automatic retries were exhausted.
+    }, [id, name, cached, registerDetails, retryCount])
+
+    const goToDetail = () => {
+        // Row index (not raw scrollY) survives the virtualized grid
+        // re-measuring row heights on remount.
+        if (rowIndex != null) sessionStorage.setItem('scrollRowIndex', rowIndex)
+        navigate(`/pokemon/${id}`)
+    }
+
+    if (failed) {
+        return (
+            <button
+                type="button"
+                className="pokemon-card loading failed"
+                onClick={() => { setFailed(false); setRetryCount(c => c + 1) }}
+            >
+                Couldn't load — tap to retry
+            </button>
+        )
+    }
 
     if (!details) return <div className="pokemon-card loading">Loading...</div>
 
     return (
-        <div className="pokemon-card" onClick={() => {
-            // Row index (not raw scrollY) survives the virtualized grid
-            // re-measuring row heights on remount.
-            if (rowIndex != null) sessionStorage.setItem('scrollRowIndex', rowIndex)
-            navigate(`/pokemon/${id}`)
-        }}>
+        <div
+            className="pokemon-card"
+            role="link"
+            tabIndex={0}
+            aria-label={`View details for ${details.name}`}
+            onClick={goToDetail}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') goToDetail()
+            }}
+        >
             <img className="pokemon-image" src={details.sprite} alt={details.name} />
             <h3>
                 <span className="pokemon-number">#{String(details.id).padStart(3, '0')}</span>

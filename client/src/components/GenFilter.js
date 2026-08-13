@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './GenFilter.css'
 
 const GENERATIONS = [
@@ -14,6 +14,29 @@ const GENERATIONS = [
 
 function GenFilter({ selectedGens, setSelectedGens }) {
     const [isOpen, setIsOpen] = useState(false)
+    const containerRef = useRef(null)
+
+    useEffect(() => {
+        if (!isOpen) return
+
+        const handlePointerDown = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setIsOpen(false)
+            }
+        }
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') setIsOpen(false)
+        }
+
+        document.addEventListener('mousedown', handlePointerDown)
+        document.addEventListener('touchstart', handlePointerDown)
+        document.addEventListener('keydown', handleKeyDown)
+        return () => {
+            document.removeEventListener('mousedown', handlePointerDown)
+            document.removeEventListener('touchstart', handlePointerDown)
+            document.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [isOpen])
 
     const toggleGen = (gen) => {
         setSelectedGens(prev =>
@@ -29,32 +52,41 @@ function GenFilter({ selectedGens, setSelectedGens }) {
         : selectedGens.map(g => g.label).join(', ')
 
     return (
-        <div className="gen-filter">
-            <div className="gen-toggle" onClick={() => setIsOpen(!isOpen)}>
+        <div className="gen-filter" ref={containerRef}>
+            <button
+                type="button"
+                className="gen-toggle"
+                aria-haspopup="true"
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen(!isOpen)}
+            >
                 <span>{label}</span>
-                <span className="gen-arrow">{isOpen ? '▲' : '▼'}</span>
-            </div>
+                <span className="gen-arrow" aria-hidden="true">{isOpen ? '▲' : '▼'}</span>
+            </button>
 
             {isOpen && (
                 <div className="gen-dropdown">
-                    {/* All button resets selection */}
-                    <div
+                    <button
+                        type="button"
                         className={`gen-option ${selectedGens.length === 0 ? 'active' : ''}`}
+                        aria-pressed={selectedGens.length === 0}
                         onClick={() => {
                             setSelectedGens([])
                             setIsOpen(false)
                         }}
                     >
                         All
-                    </div>
+                    </button>
                     {GENERATIONS.map(gen => (
-                        <div
+                        <button
+                            type="button"
                             key={gen.label}
                             className={`gen-option ${isActive(gen) ? 'active' : ''}`}
+                            aria-pressed={isActive(gen)}
                             onClick={() => toggleGen(gen)}
                         >
                             {gen.label}
-                        </div>
+                        </button>
                     ))}
                 </div>
             )}

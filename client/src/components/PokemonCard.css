@@ -4,7 +4,23 @@
     padding: 20px;
     cursor: pointer;
     transition: transform 0.2s ease;
-    background-color: #2a2d45;
+    background-color: var(--surface-color);
+}
+
+.pokemon-card:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* The failed/retry state renders as a <button>, unlike every other
+   .pokemon-card variant - reset the browser's default button chrome so it
+   matches the div-based card look exactly. */
+.pokemon-card.failed {
+    width: 100%;
+    border: 1px dashed var(--primary-color);
+    font-family: inherit;
+    font-size: 0.95rem;
+    text-align: center;
 }
 
 /* Reserves roughly the same footprint as a resolved card (image + heading +

@@ -2,7 +2,7 @@
     border: 1px solid var(--primary-color);
     border-radius: 8px;
     padding: 5px 10px;
-    background-color: #2a2d45;
+    background-color: var(--surface-color);
     color: var(--secondary-color);
     width: 100%;
     max-width: 400px;
@@ -10,7 +10,7 @@
 
 .search-bar input {
     outline: none;
-    background-color: #2a2d45;
+    background-color: var(--surface-color);
     font-family: var(--font-family);
     color: var(--secondary-color);
     border: none;
